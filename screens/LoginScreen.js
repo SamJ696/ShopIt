@@ -8,16 +8,37 @@ import {
   TextInput,
   Pressable,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password
+    }
+
+    axios.post("http://192.168.1.2:8000/login", user).then((response) => {
+      console.log(response);
+      const token = response.data.token;
+
+      AsyncStorage.setItem("authToken", token);
+      navigation.replace("Home");
+    }).catch((error) => {
+      Alert.alert("Login Error", "Invalid Email");
+      console.log(error);
+    })
+  }
 
   return (
     <SafeAreaView
@@ -128,6 +149,7 @@ const LoginScreen = () => {
         <View style={{ marginTop: 55 }} />
 
         <TouchableOpacity
+        onPress={handleLogin}
           style={{
             widht: 180,
             backgroundColor: "#FEBE10",

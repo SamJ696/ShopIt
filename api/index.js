@@ -119,4 +119,40 @@ app.get("/verify/:token", async(req, res) => {
     catch(error){
         res.status(500).json({ message: "Email Verification Failed." })
     }
+});
+
+const generateSecretKey = () => {
+  const secretKey = crypto.randomBytes(32).toString("hex");
+
+  return secretKey;
+}
+
+const secretKey = generateSecretKey();
+
+// Endpoint to login the user.
+app.post("/login", async(req, res) => {
+  try {
+      const {email, password} = req.body;
+
+      // Check if the user exists.
+      const user = await User.findOne({ email });
+
+      if (!user){
+        return res.status(401).json({ message: "Invalid Email or Password." });
+      }
+
+      // Check if the password is right or not.
+      if (user.password !== password){
+        return res.status(401).json({ message: "Invalid Password" });
+      }
+
+      // Generate a Token.
+      const token = jwt.sign({ userId: user._id }, secretKey);
+
+      res.status(200).json({ token });
+  }
+
+  catch(error){
+    res.status(500).json({ message: "Login Failed." })
+  }
 })
