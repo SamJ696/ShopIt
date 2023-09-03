@@ -22,15 +22,15 @@ const RegisterScreen = () => {
   const [name, setName] = useState("");
   const navigation = useNavigation();
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const user = {
       name: name,
       email: email,
       password: password,
     };
-
+  
     // Send a post request to the backend.
-    axios.post("http://localhost:8000/register", user).then((response) => {
+    axios.post("http://192.168.1.2:8000/register", user).then((response) => {
       console.log(response);
       Alert.alert(
         "Registration Successful",
