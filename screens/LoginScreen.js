@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +21,24 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token  = await AsyncStorage.getItem("authToken");
+
+        if (token){
+          navigation.replace("Main");
+        }
+      }
+
+      catch(error){
+        console.log("Error Message", error);
+      }
+    }
+
+    checkLoginStatus();
+  }, [])
 
   const handleLogin = () => {
     const user = {
@@ -33,7 +51,7 @@ const LoginScreen = () => {
       const token = response.data.token;
 
       AsyncStorage.setItem("authToken", token);
-      navigation.replace("Home");
+      navigation.replace("Main");
     }).catch((error) => {
       Alert.alert("Login Error", "Invalid Email");
       console.log(error);

@@ -3,8 +3,10 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const dotenv = require('dotenv');
 
 const app = express();
+dotenv.config();
 const port = 8000;
 const cors = require("cors");
 
@@ -16,7 +18,7 @@ app.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 
 mongoose
-  .connect("mongodb+srv://jsam696:sj21122001@cluster0.z8bectu.mongodb.net/", {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
