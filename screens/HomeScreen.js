@@ -10,7 +10,7 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { SliderBox } from "react-native-image-slider-box";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -19,6 +19,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import ProductItem from "../components/ProductItem";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const HomeScreen = () => {
   const list = [
@@ -121,7 +122,7 @@ const HomeScreen = () => {
       id: "0",
       title:
         "Oppo Enco Air3 Pro True Wireless in Ear Earbuds with Industry First Composite Bamboo Fiber, 49dB ANC, 30H Playtime, 47ms Ultra Low Latency,Fast Charge,BT 5.3 (Green)",
-      offer: "72% off",
+      offer: "72% Off",
       oldPrice: 7500,
       price: 4500,
       image:
@@ -139,7 +140,7 @@ const HomeScreen = () => {
       id: "1",
       title:
         "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
-      offer: "40%",
+      offer: "40% Off",
       oldPrice: 7955,
       price: 3495,
       image: "https://m.media-amazon.com/images/I/41mQKmbkVWL._AC_SY400_.jpg",
@@ -154,7 +155,7 @@ const HomeScreen = () => {
     {
       id: "2",
       title: "Aishwariya System On Ear Wireless On Ear Bluetooth Headphones",
-      offer: "40%",
+      offer: "40% Off",
       oldPrice: 7955,
       price: 3495,
       image: "https://m.media-amazon.com/images/I/41t7Wa+kxPL._AC_SY400_.jpg",
@@ -166,7 +167,7 @@ const HomeScreen = () => {
       id: "3",
       title:
         "Fastrack Limitless FS1 Pro Smart Watch|1.96 Super AMOLED Arched Display with 410x502 Pixel Resolution|SingleSync BT Calling|NitroFast Charging|110+ Sports Modes|200+ Watchfaces|Upto 7 Days Battery",
-      offer: "40%",
+      offer: "40% Off",
       oldPrice: 24999,
       price: 19999,
       image: "https://m.media-amazon.com/images/I/71k3gOik46L._AC_SY400_.jpg",
@@ -181,22 +182,31 @@ const HomeScreen = () => {
   ];
 
   const [products, setProducts] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [category, setCategory] = useState("jewelery");
+  const [items, setItems] = useState([
+    { label: "Men's clothing", value: "men's clothing" },
+    { label: "jewelery", value: "jewelery" },
+    { label: "electronics", value: "electronics" },
+    { label: "women's clothing", value: "women's clothing" },
+  ]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://fakestoreapi.com/products');
+        const response = await axios.get("https://fakestoreapi.com/products");
         setProducts(response?.data);
-      }
-
-      catch(error){
+      } catch (error) {
         console.log("Error At Product", error);
       }
-    }
+    };
 
     fetchData();
   }, []);
 
-  // console.log(products)
+  const onGenderOpen = useCallback(() => {
+    setCompanyOpen(false);
+  }, []);
 
   return (
     <SafeAreaView
@@ -387,12 +397,51 @@ const HomeScreen = () => {
           }}
         />
 
-        <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center" }}>
-          {products.map((item, index) => (
-            <ProductItem item={item} key={index} />
-          ))}
+        <View
+          style={{
+            marginHorizontal: 10,
+            marginTop: 20,
+            width: "45%",
+            marginBottom: open ? 50 : 15,
+          }}
+        >
+          <Text style={{ marginBottom: 16, fontWeight: "bold", fontSize: 18 }}>
+            Categories
+          </Text>
+          <DropDownPicker
+            style={{
+              borderColor: "#B7B7B7",
+              height: 30,
+              marginBottom: open ? 120 : 15,
+            }}
+            open={open}
+            value={category} // Gender Value
+            items={items}
+            setOpen={setOpen}
+            setValue={setCategory}
+            setItems={setItems}
+            placeholder="Choose Category"
+            placeholderStyle={styles.placeholderStyle}
+            onOpen={onGenderOpen}
+            // onChangeValue={onChange}
+            zIndex={3000}
+            zIndexReverse={1000}
+          />
         </View>
 
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
+          {products
+            ?.filter((item) => item.category === category)
+            .map((item, index) => (
+              <ProductItem item={item} key={index} />
+            ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
