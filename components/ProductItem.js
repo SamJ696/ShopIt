@@ -26,7 +26,7 @@ const ProductItem = ({ item }) => {
           alignItems: "center",
         }}
       >
-        <Text style={{ fontSize: 15, fontWeight: "bold" }}>${item?.price}</Text>
+        <Text style={{ fontSize: 15, fontWeight: "bold" }}>₹{item?.price}</Text>
         <Text style={{ color: "#FFC72C", fontWeight: "bold" }}>
           {item?.rating.rate} rating
         </Text>

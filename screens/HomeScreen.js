@@ -20,6 +20,7 @@ import { Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import ProductItem from "../components/ProductItem";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const list = [
@@ -182,6 +183,7 @@ const HomeScreen = () => {
   ];
 
   const [products, setProducts] = useState([]);
+  const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("jewelery");
   const [items, setItems] = useState([
@@ -351,6 +353,16 @@ const HomeScreen = () => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {offers.map((item, index) => (
             <Pressable
+            onPress={() => navigation.navigate("ProductInfo", {
+              id: item.id,
+              title: item.title,
+              price: item?.price,
+              carouselImages: item.carouselImages,
+              color: item?.color,
+              size: item?.size,
+              oldPrice: item?.oldPrice,
+              item: item
+            })}
               style={{
                 marginVertical: 10,
                 alignItems: "center",
