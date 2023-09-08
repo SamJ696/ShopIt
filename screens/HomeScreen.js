@@ -21,6 +21,7 @@ import axios from "axios";
 import ProductItem from "../components/ProductItem";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const HomeScreen = () => {
   const list = [
@@ -209,6 +210,9 @@ const HomeScreen = () => {
   const onGenderOpen = useCallback(() => {
     setCompanyOpen(false);
   }, []);
+
+  const cart = useSelector((state) => state.cart.cart);
+  console.log(cart);
 
   return (
     <SafeAreaView
