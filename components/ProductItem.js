@@ -6,9 +6,22 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/CartReducer";
 
 const ProductItem = ({ item }) => {
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  const dispatch = useDispatch();
+  const addItemToCart = (item) => {
+    setAddedToCart(true);
+    dispatch(addToCart(item));
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 60000);
+  };
+
   return (
     <Pressable style={{ marginHorizontal: 20, marginVertical: 30 }}>
       <Image
@@ -33,6 +46,7 @@ const ProductItem = ({ item }) => {
       </View>
 
       <TouchableOpacity
+        onPress={() => addItemToCart(item)}
         style={{
           backgroundColor: "#FFC72C",
           padding: 10,
@@ -40,10 +54,10 @@ const ProductItem = ({ item }) => {
           justifyContent: "center",
           alignItems: "center",
           marginHorizontal: 10,
-          marginTop: 10
+          marginTop: 10,
         }}
       >
-        <Text>Add To Cart</Text>
+        {addedToCart ? <Text>Added To Cart</Text> : <Text>Add To Cart</Text>}
       </TouchableOpacity>
     </Pressable>
   );
