@@ -10,10 +10,12 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SliderBox } from "react-native-image-slider-box";
 
 import { Ionicons } from "@expo/vector-icons";
+import jwt_decode from "jwt-decode";
+
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -29,6 +31,8 @@ import {
   ModalContent,
   SlideAnimation,
 } from "react-native-modals";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserType } from "../UserContext";
 
 const HomeScreen = () => {
   const list = [
@@ -194,6 +198,9 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("jewelery");
+  const [addresses, setAddresses] = useState([]);
+  const { userId, setUserId } = useContext(UserType);
+
   const [items, setItems] = useState([
     { label: "Men's clothing", value: "men's clothing" },
     { label: "jewelery", value: "jewelery" },
@@ -220,6 +227,37 @@ const HomeScreen = () => {
 
   const cart = useSelector((state) => state.cart.cart);
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (userId) {
+      fetchAddresses();
+    }
+  }, [userId, modalVisible]);
+
+  const fetchAddresses = async () => {
+    try {
+      const response = await axios.get(
+        `http://192.168.1.2:8000/addresses/${userId}`
+      );
+
+      const { addresses } = response.data;
+      setAddresses(addresses);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
+
+    fetchUser();
+  }, []);
+  console.log("Address : ", addresses);
 
   return (
     <>

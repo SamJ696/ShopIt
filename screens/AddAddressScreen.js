@@ -6,16 +6,41 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { UserType } from "../UserContext";
 
 const AddAddressScreen = () => {
 
     const navigation = useNavigation();
+    const [addresses, setAddresses] = useState([]);
+    const { userId, setUserId } = useContext(UserType);
+
+
+    useEffect(() => {
+        fetchAddresses();
+    }, []);
+
+    const fetchAddresses = async() => {
+        try {
+            const response = await axios.get(`http://192.168.1.2:8000/addresses/${userId}`);
+
+            const {addresses} = response.data;
+
+            setAddresses(addresses);
+        }
+
+        catch(error){
+            console.log("Error", error);
+        }
+    }
+
+    console.log("Addresses", addresses);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 30 }}>
