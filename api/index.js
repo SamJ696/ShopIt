@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
 const app = express();
 dotenv.config();
@@ -59,9 +59,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
   // Send the email
   try {
     await transporter.sendMail(mailOptions);
-  }
-
-  catch(error) {
+  } catch (error) {
     console.log("Error sending verify email", error);
   }
 };
@@ -97,64 +95,103 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
 // Endpoint to verify the email.
-app.get("/verify/:token", async(req, res) => {
-    try {
-        const token = req.params.token;
+app.get("/verify/:token", async (req, res) => {
+  try {
+    const token = req.params.token;
 
-        // Find the user with the gven verification token.
-        const user = await User.findOne({ verificationToken: token });
-        if (!user){
-            return res.status(404).json({ message: "Invalid verification token" })
-        }
-
-        // Mark the user as verified.
-        user.verified = true;
-        user.verificationToken = undefined;
-
-        await user.save();
-
-        res.status(200).json({ message: "Email verified successfully." });
+    // Find the user with the gven verification token.
+    const user = await User.findOne({ verificationToken: token });
+    if (!user) {
+      return res.status(404).json({ message: "Invalid verification token" });
     }
 
-    catch(error){
-        res.status(500).json({ message: "Email Verification Failed." })
-    }
+    // Mark the user as verified.
+    user.verified = true;
+    user.verificationToken = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Email verified successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Email Verification Failed." });
+  }
 });
 
 const generateSecretKey = () => {
   const secretKey = crypto.randomBytes(32).toString("hex");
 
   return secretKey;
-}
+};
 
 const secretKey = generateSecretKey();
 
 // Endpoint to login the user.
-app.post("/login", async(req, res) => {
+app.post("/login", async (req, res) => {
   try {
-      const {email, password} = req.body;
+    const { email, password } = req.body;
 
-      // Check if the user exists.
-      const user = await User.findOne({ email });
+    // Check if the user exists.
+    const user = await User.findOne({ email });
 
-      if (!user){
-        return res.status(401).json({ message: "Invalid Email or Password." });
-      }
+    if (!user) {
+      return res.status(401).json({ message: "Invalid Email or Password." });
+    }
 
-      // Check if the password is right or not.
-      if (user.password !== password){
-        return res.status(401).json({ message: "Invalid Password" });
-      }
+    // Check if the password is right or not.
+    if (user.password !== password) {
+      return res.status(401).json({ message: "Invalid Password" });
+    }
 
-      // Generate a Token.
-      const token = jwt.sign({ userId: user._id }, secretKey);
+    // Generate a Token.
+    const token = jwt.sign({ userId: user._id }, secretKey);
 
-      res.status(200).json({ token });
+    res.status(200).json({ token });
+  } catch (error) {
+    res.status(500).json({ message: "Login Failed." });
   }
+});
 
-  catch(error){
-    res.status(500).json({ message: "Login Failed." })
+// Endpoint to store a new address to backend.
+app.post("/addresses", async (req, res) => {
+  try {
+    const { userId, address } = req.body;
+
+    // Find the user by userId.
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User Not Found" });
+    }
+
+    // Add the new address to the user's adresses array.
+    user.addresses.push(address);
+
+    // Save the updated user in the backend.
+    await user.save();
+
+    res.status(200).json({ message: "Address created successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding address" });
   }
-})
+});
+
+// Endpoint to get all the addressses of a particular user.
+app.get("/addresses/:userId", async (req, res) => {
+  try {
+    // Access user id for addresses.
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user){
+      return res.status(404).json({ message: "User Not Found" })
+    }
+
+    const addresses = user.addresses;
+    res.status(200).json({ addresses })
+  } 
+  
+  catch (error) {
+    res.status(500).json({ message: "Error retrieving addresses" });
+  }
+});

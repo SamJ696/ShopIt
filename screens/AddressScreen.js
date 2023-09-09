@@ -5,17 +5,68 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwt_decode from "jwt-decode";
+import { UserType } from "../UserContext";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 const AddressScreen = () => {
+  const navigation = useNavigation();
+  const [name, setName] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [houseNo, setHouseNo] = useState("");
+  const [street, setStreet] = useState("");
+  const [landmark, setLandmark] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const { userId, setUserId } = useContext(UserType);
 
-    const [name, setName] = useState("");
-    const [mobileNo, setMobileNo] = useState("");
-    const [houseNo, setHouseNo] = useState("");
-    const [street, setStreet] = useState("");
-    const [landmark, setLandmark] = useState("");
-    const [postalCode, setPostalCode] = useState("");
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+    };
+
+    fetchUser();
+  }, []);
+
+  console.log(userId);
+
+  const handleAddAddress = () => {
+    const address = {
+      name,
+      mobileNo,
+      houseNo,
+      street,
+      landmark,
+      postalCode,
+    };
+
+    axios
+      .post("http://192.168.1.2:8000/addresses", { userId, address })
+      .then((response) => {
+        Alert.alert("Success", "Address added successfully");
+        setName("");
+        setMobileNo("");
+        setHouseNo("");
+        setStreet("");
+        setLandmark("");
+        setPostalCode("");
+
+        setTimeout(() => {
+          navigation.goBack();
+        }, 500);
+      })
+      .catch((error) => {
+        Alert.alert("Error", "Failed to Add Address");
+        console.log("Error", error);
+      });
+  };
 
   return (
     <ScrollView style={{ marginTop: 30 }}>
@@ -41,6 +92,8 @@ const AddressScreen = () => {
         <View style={{ marginVertical: 10 }}>
           <Text style={{ fontSize: 15, fontWeight: "bold" }}>Full Name</Text>
           <TextInput
+            value={name}
+            onChangeText={(text) => setName(text)}
             style={{
               padding: 10,
               borderColor: "#D0D0D0",
@@ -57,6 +110,9 @@ const AddressScreen = () => {
             Mobile Number
           </Text>
           <TextInput
+            value={mobileNo}
+            onChangeText={(text) => setMobileNo(text)}
+            keyboardType="numeric"
             style={{
               padding: 10,
               borderColor: "#D0D0D0",
@@ -74,6 +130,8 @@ const AddressScreen = () => {
             Flat / House Number / Building
           </Text>
           <TextInput
+            value={houseNo}
+            onChangeText={(text) => setHouseNo(text)}
             style={{
               padding: 10,
               borderColor: "#D0D0D0",
@@ -91,6 +149,8 @@ const AddressScreen = () => {
             Area / Street / Sector / Village
           </Text>
           <TextInput
+            value={street}
+            onChangeText={(text) => setStreet(text)}
             style={{
               padding: 10,
               borderColor: "#D0D0D0",
@@ -106,6 +166,8 @@ const AddressScreen = () => {
         <View style={{ marginVertical: 10 }}>
           <Text style={{ fontSize: 15, fontWeight: "bold" }}>Landmark</Text>
           <TextInput
+            value={landmark}
+            onChangeText={(text) => setLandmark(text)}
             style={{
               padding: 10,
               borderColor: "#D0D0D0",
@@ -121,6 +183,8 @@ const AddressScreen = () => {
         <View>
           <Text style={{ fontSize: 15, fontWeight: "bold" }}>Pincode</Text>
           <TextInput
+            value={postalCode}
+            onChangeText={(text) => setPostalCode(text)}
             style={{
               padding: 10,
               borderColor: "#D0D0D0",
@@ -134,6 +198,7 @@ const AddressScreen = () => {
         </View>
 
         <TouchableOpacity
+          onPress={handleAddAddress}
           style={{
             backgroundColor: "#FFC72C",
             padding: 10,
