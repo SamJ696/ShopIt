@@ -257,7 +257,6 @@ const HomeScreen = () => {
 
     fetchUser();
   }, []);
-  console.log("Address : ", addresses);
 
   return (
     <>

@@ -35,8 +35,6 @@ const AddressScreen = () => {
     fetchUser();
   }, []);
 
-  console.log(userId);
-
   const handleAddAddress = () => {
     const address = {
       name,
