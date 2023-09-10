@@ -6,12 +6,12 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { UserType } from "../UserContext";
 
@@ -37,6 +37,13 @@ const AddAddressScreen = () => {
       console.log("Error", error);
     }
   };
+
+  // Refresh the addresses when the component comes into the focus.
+  useFocusEffect(
+    useCallback(() => {
+      fetchAddresses();
+    }, [])
+  )
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 30 }}>
@@ -122,7 +129,7 @@ const AddAddressScreen = () => {
               {item.street}
             </Text>
 
-            <Text style={{ fontSize: 15, color: "#181818" }}>India, Delhi</Text>
+            <Text style={{ fontSize: 15, color: "#181818" }}>Delhi, India</Text>
 
             <Text style={{ fontSize: 15, color: "#181818" }}>
               Phone No : {item.mobileNo}

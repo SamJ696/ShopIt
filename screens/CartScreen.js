@@ -22,10 +22,11 @@ import {
   incrementQuantity,
   removeFromCart,
 } from "../redux/CartReducer";
+import { useNavigation } from "@react-navigation/native";
 
 const CartScreen = () => {
+    const navigation = useNavigation();
   const cart = useSelector((state) => state.cart.cart);
-  //   console.log(cart);
 
   const total = cart
     .map((item) => item.price * item.quantity)
@@ -85,19 +86,30 @@ const CartScreen = () => {
 
       {/* <Text style={{ marginHorizontal: 10 }}>EMI Details</Text> */}
 
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#FFC72C",
-          padding: 10,
-          borderRadius: 8,
-          justifyContent: "center",
-          alignItems: "center",
-          marginHorizontal: 10,
-          marginTop: 10,
-        }}
-      >
-        <Text>Proceed to buy {cart.length} items.</Text>
-      </TouchableOpacity>
+      {cart.length >= 1 ? (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Confirm")}
+          style={{
+            backgroundColor: "#FFC72C",
+            padding: 10,
+            borderRadius: 8,
+            justifyContent: "center",
+            alignItems: "center",
+            marginHorizontal: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text>Proceed to buy {cart.length} items.</Text>
+        </TouchableOpacity>
+      ) : (
+        <>
+          <Text
+            style={{ textAlign: "center", fontSize: 18, fontWeight: "600" }}
+          >
+            Add Items into your cart
+          </Text>
+        </>
+      )}
 
       <Text
         style={{
@@ -224,7 +236,7 @@ const CartScreen = () => {
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
-              onPress={() => deleteItem(item)}
+                onPress={() => deleteItem(item)}
                 style={{
                   backgroundColor: "white",
                   paddingHorizontal: 8,
