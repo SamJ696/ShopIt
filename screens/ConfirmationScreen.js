@@ -6,6 +6,7 @@ import {
   Pressable,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { current } from "@reduxjs/toolkit";
@@ -33,33 +34,42 @@ const ConfirmationScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const handlePlaceOrder = async() => {
+  const pay = async() => {
     try {
-        const orderData = {
-            userId: userId,
-            cartItems: cart,
-            totalPrice: total,
-            shippingAddress: selectedAddress,
-            paymentMethod: selectedOption
-        }
-
-        const response = await axios.post("http://192.168.1.2:8000/orders", orderData);
-
-        if (response.status === 200){
-            navigation.navigate("Order");
-            dispatch(cleanCart());
-            console.log("Order Created Successfully", response.data.order);
-        }
-
-        else {
-            console.log("Error Creating Order", response.data);
-        }
+        
     }
 
     catch(error){
-        console.log("Error Place Order", error);
+        console.log("Payment error", error);
     }
   }
+
+  const handlePlaceOrder = async () => {
+    try {
+      const orderData = {
+        userId: userId,
+        cartItems: cart,
+        totalPrice: total,
+        shippingAddress: selectedAddress,
+        paymentMethod: selectedOption,
+      };
+
+      const response = await axios.post(
+        "http://192.168.1.2:8000/orders",
+        orderData
+      );
+
+      if (response.status === 200) {
+        navigation.navigate("Order");
+        dispatch(cleanCart());
+        console.log("Order Created Successfully", response.data.order);
+      } else {
+        console.log("Error Creating Order", response.data);
+      }
+    } catch (error) {
+      console.log("Error Place Order", error);
+    }
+  };
 
   const cart = useSelector((state) => state.cart.cart);
 
@@ -386,7 +396,20 @@ const ConfirmationScreen = () => {
               <FontAwesome name="dot-circle-o" size={24} color="#008397" />
             ) : (
               <Entypo
-                onPress={() => setSelectedOption("card")}
+                onPress={() => {
+                  setSelectedOption("card");
+                  Alert.alert("UPI / Debit Card", "Pay Online", [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel is Pressed"),
+                    },
+
+                    {
+                      text: "OK",
+                      onPress: () => pay(),
+                    },
+                  ]);
+                }}
                 name="circle"
                 size={20}
                 color="gray"
@@ -522,14 +545,14 @@ const ConfirmationScreen = () => {
           </View>
 
           <TouchableOpacity
-          onPress={handlePlaceOrder}
+            onPress={handlePlaceOrder}
             style={{
               backgroundColor: "#FFC72C",
               padding: 10,
               borderRadius: 20,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 20
+              marginTop: 20,
             }}
           >
             <Text>Place Order</Text>
