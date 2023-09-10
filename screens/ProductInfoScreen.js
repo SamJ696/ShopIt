@@ -7,23 +7,20 @@ import {
   TextInput,
   ImageBackground,
   Dimensions,
-  Image,
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { SliderBox } from "react-native-image-slider-box";
 
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/CartReducer";
 
 const ProductInfoScreen = () => {
   const route = useRoute();
   const { width } = Dimensions.get("window");
-  const navigation = useNavigation();
   const height = (width * 100) / 100;
   const [addedToCart, setAddedToCart] = useState(false);
 

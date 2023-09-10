@@ -13,9 +13,9 @@ import {
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SliderBox } from "react-native-image-slider-box";
 
-import { Ionicons } from "@expo/vector-icons";
 import jwt_decode from "jwt-decode";
 
+import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -200,6 +200,8 @@ const HomeScreen = () => {
   const [category, setCategory] = useState("jewelery");
   const [addresses, setAddresses] = useState([]);
   const { userId, setUserId } = useContext(UserType);
+  const [selectedAddress, setSelectedAddress] = useState("");
+  console.log(selectedAddress);
 
   const [items, setItems] = useState([
     { label: "Men's clothing", value: "men's clothing" },
@@ -312,9 +314,11 @@ const HomeScreen = () => {
           >
             <MaterialIcons name="location-pin" size={24} color="black" />
             <Pressable onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={{ fontSize: 15, fontWeight: "500", left: 20 }}>
-                Deliver to Samyak - Rohini Delhi-110085
-              </Text>
+              {selectedAddress ? (
+                <Text>Deliver to {selectedAddress.name} - {selectedAddress.street}</Text>
+              ) : (
+                <Text>Add an Address</Text>
+              )}
             </Pressable>
 
             <Entypo
@@ -548,6 +552,55 @@ const HomeScreen = () => {
           </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {/* All addresses shown here. */}
+            {addresses.map((item, index) => (
+              <Pressable
+              onPress={() => setSelectedAddress(item)}
+                style={{
+                  width: 140,
+                  height: 140,
+                  borderColor: "#D0D0D0",
+                  borderWidth: 1,
+                  padding: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 3,
+                  marginRight: 15,
+                  marginTop: 10,
+                  backgroundColor: selectedAddress === item ? "#FBCEB1" : "white"
+                }}
+              >
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 3 }}
+                >
+                  <Text style={{ fontSize: 13, fontWeight: "bold" }}>
+                    {item.name}
+                  </Text>
+                  <MaterialIcons name="location-pin" size={24} color="red" />
+                </View>
+
+                <View>
+                  <Text
+                    numberOfLines={1}
+                    style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                  >
+                    {item.houseNo}, {item.landmark}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                  >
+                    {item.street}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                  >
+                    Delhi, India
+                  </Text>
+                </View>
+              </Pressable>
+            ))}
             <Pressable
               onPress={() => {
                 setModalVisible(false);
