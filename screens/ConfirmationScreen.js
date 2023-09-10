@@ -13,7 +13,9 @@ import axios from "axios";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { UserType } from "../UserContext";
 import { FontAwesome } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { cleanCart } from "../redux/CartReducer";
 
 const ConfirmationScreen = () => {
   const steps = [
@@ -28,6 +30,36 @@ const ConfirmationScreen = () => {
   const [selectedAddress, setSelectedAddress] = useState("");
   const [option, setOption] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const handlePlaceOrder = async() => {
+    try {
+        const orderData = {
+            userId: userId,
+            cartItems: cart,
+            totalPrice: total,
+            shippingAddress: selectedAddress,
+            paymentMethod: selectedOption
+        }
+
+        const response = await axios.post("http://192.168.1.2:8000/orders", orderData);
+
+        if (response.status === 200){
+            navigation.navigate("Order");
+            dispatch(cleanCart());
+            console.log("Order Created Successfully", response.data.order);
+        }
+
+        else {
+            console.log("Error Creating Order", response.data);
+        }
+    }
+
+    catch(error){
+        console.log("Error Place Order", error);
+    }
+  }
 
   const cart = useSelector((state) => state.cart.cart);
 
@@ -489,7 +521,8 @@ const ConfirmationScreen = () => {
             </Text>
           </View>
 
-          <Pressable
+          <TouchableOpacity
+          onPress={handlePlaceOrder}
             style={{
               backgroundColor: "#FFC72C",
               padding: 10,
@@ -500,7 +533,7 @@ const ConfirmationScreen = () => {
             }}
           >
             <Text>Place Order</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       )}
     </ScrollView>
