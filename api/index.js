@@ -233,7 +233,7 @@ app.post("/orders", async (req, res) => {
 });
 
 // Get the user profile.
-app.get("/profile/userId", async (req, res) => {
+app.get("/profile/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -250,7 +250,7 @@ app.get("/profile/userId", async (req, res) => {
 });
 
 // Order in profile
-app.get("/orders/userId", async (req, res) => {
+app.get("/orders/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
 

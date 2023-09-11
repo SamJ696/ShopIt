@@ -17,6 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { cleanCart } from "../redux/CartReducer";
+import RazorpayCheckout from "react-native-razorpay";
 
 const ConfirmationScreen = () => {
   const steps = [
@@ -34,15 +35,48 @@ const ConfirmationScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const pay = async() => {
+  const pay = async () => {
     try {
-        
-    }
+      const options = {
+        description: "Adding to Wallet",
+        currency: "INR",
+        name: "Amazon",
+        key: "rzp_test_vbh9M0ps7bV2fg",
+        amount: total * 100,
+        prefill: {
+          email: "void@razorpay.com",
+          contact: "9191919191",
+          name: "RazorPay Software",
+        },
+        theme: { color: "#F37254" },
+      };
 
-    catch(error){
-        console.log("Payment error", error);
+      const data = await RazorpayCheckout.open(options);
+
+      const orderData = {
+        userId: userId,
+        cartItems: cart,
+        totalPrice: total,
+        shippingAddress: selectedAddress,
+        paymentMethod: "card",
+      };
+
+      const response = await axios.post(
+        "http://192.168.1.2:8000/orders",
+        orderData
+      );
+
+      if (response.status === 200) {
+        navigation.navigate("Order");
+        dispatch(cleanCart());
+        console.log("Order Created Successfully", response.data.order);
+      } else {
+        console.log("Error Creating Order", response.data);
+      }
+    } catch (error) {
+      console.log("Payment error", error);
     }
-  }
+  };
 
   const handlePlaceOrder = async () => {
     try {

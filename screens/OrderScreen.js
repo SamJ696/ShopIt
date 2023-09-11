@@ -9,7 +9,7 @@ const OrderScreen = () => {
   useEffect(() => {
     setTimeout(() => {
       navigation.replace("Main");
-    }, 1300);
+    }, 1900);
   }, []);
 
   return (
