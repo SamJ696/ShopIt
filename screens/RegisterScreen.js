@@ -31,7 +31,7 @@ const RegisterScreen = () => {
 
     // Send a post request to the backend.
     axios
-      .post("http://localhost:8000/register", user)
+      .post(`https://e-commerce-git-main-samj696.vercel.app/register`, user)
       .then((response) => {
         console.log(response);
         Alert.alert(

@@ -46,7 +46,7 @@ const AddressScreen = () => {
     };
 
     axios
-      .post("http://localhost:8000/addresses", { userId, address })
+      .post(`https://e-commerce-git-main-samj696.vercel.app/addresses`, { userId, address })
       .then((response) => {
         Alert.alert("Success", "Address added successfully");
         setName("");

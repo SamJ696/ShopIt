@@ -27,7 +27,7 @@ const AddAddressScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `https://e-commerce-git-main-samj696.vercel.app/addresses/${userId}`
       );
 
       const { addresses } = response.data;

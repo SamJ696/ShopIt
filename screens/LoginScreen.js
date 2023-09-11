@@ -45,7 +45,7 @@ const LoginScreen = () => {
     };
 
     axios
-      .post("http://localhost:8000/login", user)
+      .post(`https://e-commerce-git-main-samj696.vercel.app/login`, user)
       .then((response) => {
         console.log(response);
         const token = response.data.token;

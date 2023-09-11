@@ -55,7 +55,7 @@ const ProfileScreen = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/profile/${userId}`
+          `https://e-commerce-git-main-samj696.vercel.app/profile/${userId}`
         );
         const { user } = response.data;
         setUser(user);
@@ -81,7 +81,7 @@ const ProfileScreen = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/orders/${userId}`
+          `https://e-commerce-git-main-samj696.vercel.app/orders/${userId}`
         );
 
         const orders = response.data.orders;

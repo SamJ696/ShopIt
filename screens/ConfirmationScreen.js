@@ -62,7 +62,7 @@ const ConfirmationScreen = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/orders",
+        `https://e-commerce-git-main-samj696.vercel.app/orders`,
         orderData
       );
 
@@ -89,7 +89,7 @@ const ConfirmationScreen = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/orders",
+        `https://e-commerce-git-main-samj696.vercel.app/orders`,
         orderData
       );
 
@@ -118,7 +118,7 @@ const ConfirmationScreen = () => {
   const fetchAddresses = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/addresses/${userId}`
+        `https://e-commerce-git-main-samj696.vercel.app/addresses/${userId}`
       );
 
       const { addresses } = response.data;
