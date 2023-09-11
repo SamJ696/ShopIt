@@ -265,3 +265,7 @@ app.get("/orders/:userId", async (req, res) => {
     res.status(500).json({ message: "Error in order for profile" });
   }
 });
+
+app.get("/", (req, res) => {
+  res.send("Hellooo.");
+});
