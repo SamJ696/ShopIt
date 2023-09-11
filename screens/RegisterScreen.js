@@ -28,36 +28,28 @@ const RegisterScreen = () => {
       email: email,
       password: password,
     };
-  
+
     // Send a post request to the backend.
-    axios.post("http://192.168.1.2:8000/register", user).then((response) => {
-      console.log(response);
-      Alert.alert(
-        "Registration Successful",
-        "You have Registered successfully"
-      );
-      setName("");
-      setPassword("");
-      setEmail("");
-    }).catch((error) => {
-        Alert.alert("Registration Error", "An Error occured during registration");
+    axios
+      .post("http://localhost:8000/register", user)
+      .then((response) => {
+        console.log(response);
+        Alert.alert(
+          "Registration Successful",
+          "You have Registered successfully"
+        );
+        setName("");
+        setPassword("");
+        setEmail("");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Registration Error",
+          "An Error occured during registration"
+        );
         console.log("Registration Failed", error);
-    })
+      });
   };
-//     axios.post("http://localhost:8000/register", user).then((response) => {
-//       console.log(response);
-//       Alert.alert(
-//         "Registration Successful",
-//         "You have Registered successfully"
-//       );
-//       setName("");
-//       setPassword("");
-//       setEmail("");
-//     }).catch((error) => {
-//         Alert.alert("Registration Error", "An Error occured during registration");
-//         console.log("Registration Failed", error);
-//     })
-//   };
 
   return (
     <SafeAreaView
@@ -65,9 +57,9 @@ const RegisterScreen = () => {
     >
       <View>
         <Image
-          style={{ width: 150, height: 150 }}
+          style={{ width: 150, height: 100, marginTop: 30 }}
           source={{
-            uri: "https://atlas-content1-cdn.pixelsquid.com/assets_v2/241/2415572334447432841/jpeg-600/G03.jpg",
+            uri: "https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png",
           }}
         />
       </View>

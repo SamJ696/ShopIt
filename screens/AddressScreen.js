@@ -46,7 +46,7 @@ const AddressScreen = () => {
     };
 
     axios
-      .post("http://192.168.1.2:8000/addresses", { userId, address })
+      .post("http://localhost:8000/addresses", { userId, address })
       .then((response) => {
         Alert.alert("Success", "Address added successfully");
         setName("");

@@ -55,7 +55,7 @@ const ProfileScreen = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.1.2:8000/profile/${userId}`
+          `http://localhost:8000/profile/${userId}`
         );
         const { user } = response.data;
         setUser(user);
@@ -81,7 +81,7 @@ const ProfileScreen = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.1.2:8000/orders/${userId}`
+          `http://localhost:8000/orders/${userId}`
         );
 
         const orders = response.data.orders;
@@ -152,7 +152,7 @@ const ProfileScreen = () => {
         </Pressable>
 
         <TouchableOpacity
-        onPress={logout}
+          onPress={logout}
           style={{
             padding: 10,
             backgroundColor: "#E0E0E0",

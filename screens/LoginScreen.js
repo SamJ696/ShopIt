@@ -25,38 +25,39 @@ const LoginScreen = () => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const token  = await AsyncStorage.getItem("authToken");
+        const token = await AsyncStorage.getItem("authToken");
 
-        if (token){
+        if (token) {
           navigation.replace("Main");
         }
-      }
-
-      catch(error){
+      } catch (error) {
         console.log("Error Message", error);
       }
-    }
+    };
 
     checkLoginStatus();
-  }, [])
+  }, []);
 
   const handleLogin = () => {
     const user = {
       email: email,
-      password: password
-    }
+      password: password,
+    };
 
-    axios.post("http://192.168.1.2:8000/login", user).then((response) => {
-      console.log(response);
-      const token = response.data.token;
+    axios
+      .post("http://localhost:8000/login", user)
+      .then((response) => {
+        console.log(response);
+        const token = response.data.token;
 
-      AsyncStorage.setItem("authToken", token);
-      navigation.replace("Main");
-    }).catch((error) => {
-      Alert.alert("Login Error", "Invalid Email");
-      console.log(error);
-    })
-  }
+        AsyncStorage.setItem("authToken", token);
+        navigation.replace("Main");
+      })
+      .catch((error) => {
+        Alert.alert("Login Error", "Invalid Email");
+        console.log(error);
+      });
+  };
 
   return (
     <SafeAreaView
@@ -64,9 +65,9 @@ const LoginScreen = () => {
     >
       <View>
         <Image
-          style={{ width: 150, height: 150 }}
+          style={{ width: 150, height: 100, marginTop: 30 }}
           source={{
-            uri: "https://atlas-content1-cdn.pixelsquid.com/assets_v2/241/2415572334447432841/jpeg-600/G03.jpg",
+            uri: "https://assets.stickpng.com/thumbs/6160562276000b00045a7d97.png",
           }}
         />
       </View>
@@ -167,7 +168,7 @@ const LoginScreen = () => {
         <View style={{ marginTop: 55 }} />
 
         <TouchableOpacity
-        onPress={handleLogin}
+          onPress={handleLogin}
           style={{
             widht: 180,
             backgroundColor: "#FEBE10",

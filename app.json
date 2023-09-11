@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "eCommerce",
-    "slug": "eCommerce",
+    "slug": "amazclone",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.samj696.aClone"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dfb9ca80-2279-4619-8f2b-75f0ab0a13fa"
+      }
+    },
+    "owner": "samj696"
   }
 }
